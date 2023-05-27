@@ -1,5 +1,4 @@
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+import os
 from pathlib import Path
 
 
@@ -8,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-j_89af+30&&4qm*8z9_(^zz8p4-ho8z_m6ylm0s$h!-p@on1_^'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['koyote92.hopto.org', '158.160.12.5', '127.0.0.1', 'localhost']
 
@@ -64,8 +63,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
 
@@ -106,9 +109,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = 'static_backend'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'collected_static'
 
-STATIC_ROOT = BASE_DIR / 'static_backend'
+# STATIC_ROOT = BASE_DIR / 'static_backend'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -118,15 +122,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
-
-sentry_sdk.init(
-        # В этой переменной будет значение для вашего проекта.
-    dsn="https://91f374aeb1e848dd9b4e058ecbfcdbb5@o4505190459375616.ingest.sentry.io/4505190461669376",
-    integrations=[
-        DjangoIntegration(),
-    ],
-
-    traces_sample_rate=1.0,
-
-    send_default_pii=True
-) 
