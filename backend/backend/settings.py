@@ -10,7 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['koyote92.hopto.org', '158.160.12.5', '127.0.0.1', 'localhost']
 
 
-# Application definition :)
+# Application definition
 
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
